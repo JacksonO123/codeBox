@@ -1,0 +1,140 @@
+:root {
+	--dark: #32374d;
+	--light: #6d6f76;
+	--contentPadding: 12px;
+	--editorFontSize: 17px;
+}
+
+* {
+	padding: 0;
+	margin: 0;
+	font-family: sans-serif;
+	box-sizing: border-box;
+}
+
+body {
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.codebox-wrapper {
+	--margin: 140px;
+	width: calc(100% - var(--margin));
+	height: calc(100% - var(--margin));
+	border-radius: 8px;
+	background: var(--dark);
+	display: flex;
+	overflow: hidden;
+	box-shadow: 0 2px 36px var(--dark);
+}
+
+code-box {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .line > * > * {
+	font-family: monospace !important;
+}
+
+.codebox-content, .codebox-content-wrapper {
+	width: 100%;
+	height: 100%;
+}
+
+.codebox-content-wrapper {
+	display: flex;
+	flex-direction: row;
+	overflow: hidden;
+}
+
+.codebox-content {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	height: 100%;
+}
+
+.codebox-content > .codebox-code {
+	padding: var(--contentPadding);
+	padding-bottom: calc(var(--contentPadding) * 3);
+	color: white;
+	font-size: var(--editorFontSize);
+}
+
+.codebox-code {
+	min-height: 100%;
+	max-height: 100%;
+	overflow-y: scroll;
+}
+
+.codebox-code::-webkit-scrollbar, .codebox-line-nums::-webkit-scrollbar {
+  display: none;
+}
+
+.codebox-tabs {
+	width: 100%;
+	height: 45px;
+	min-height: 45px;
+	border-bottom: 1px solid var(--light);
+	box-shadow: 0 -2px 8px var(--light);
+	position: sticky;
+	top: 0;
+	background: var(--dark);
+	display: flex;
+	justify-content: space-between;
+}
+
+.codebox-line-nums {
+	border-right: 1px solid var(--light);
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	color: white;
+	padding: var(--contentPadding);
+	font-size: var(--editorFontSize);
+	overflow-y: scroll;
+}
+
+br {
+	height: 19.5px;
+}
+
+.codebox-content > textarea {
+	width: 100%;
+	min-height: 100%;
+	max-height: 100%;
+	outline: none;
+	position: absolute;
+	padding: var(--contentPadding);
+	resize: none;
+	font-size: var(--editorFontSize);
+	border: none;
+	background: transparent;
+	color: transparent;
+	caret-color: white;
+	z-index: 1;
+	tab-size: 4;
+}
+
+.util {
+	color: orchid;
+}
+.number {
+	color: rgb(217, 165, 69);
+}
+.other {
+	color: rgb(200, 200, 200);
+}
+.string {
+	color: rgb(101, 194, 101);
+}
+.tab-space {
+	/* width: 40.8px !important; */
+	margin-right: 20.4px;
+	margin-left: 20.4px;
+}
