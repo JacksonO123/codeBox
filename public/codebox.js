@@ -31,6 +31,7 @@ class CodeBox extends HTMLElement {
 		this.currentTab = null;
 		this.editable = false;
 		this.alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
+		this.operators = '+-*/%^=<>';
 		this.parens = [
 			['(', ')'],
 			['[', ']'],
@@ -79,10 +80,15 @@ class CodeBox extends HTMLElement {
 		this.tabEl = tabs;
 		tabs.classList.add('codebox-tabs')
 
+		const tabControlWrapper = h('div');
+		tabControlWrapper.classList.add('tab-control-wrapper');
+
 		const tabWrapper = h('div');
 		this.tabEl = tabWrapper;
 		tabWrapper.classList.add('tab-wrapper');
-		tabs.appendChild(tabWrapper);
+
+		tabControlWrapper.appendChild(tabWrapper);
+		tabs.appendChild(tabControlWrapper);
 
 		const controlWrapper = h('div');
 		controlWrapper.classList.add('control-wrapper');
@@ -202,7 +208,34 @@ class CodeBox extends HTMLElement {
 
 		content.appendChild(textarea);
 
-
+		if (this.hasAttribute('folder')) {
+			const addFileButton = h('button');
+			addFileButton.classList.add('add-file-button');
+			addFileButton.innerHTML = '<span>+</span>';
+			addFileButton.onclick = () => {
+				const newFileName = prompt('Enter file name')?.trim();
+				if (newFileName != null) {
+					if (newFileName == '') {
+						alert('file name cannot be empty');
+					} else if (!this.isValidFile(newFileName)) {
+						alert('invalid file name. file name must have extension');
+					} else {
+						fetch(`/add_file/${newFileName}`).then(() => {
+							this.tabEl.innerHTML = '';
+							this.getFolderFiles(code, textarea);
+						});
+					}
+				}
+			}
+			if (editable) {
+				tabControlWrapper.appendChild(addFileButton);
+			}
+		}
+		this.getFolderFiles(code, textarea);
+		
+		this.updateLines();
+	}
+	getFolderFiles(code, textarea) {
 		if (this.hasAttribute('folder')) {
 			const folder = this.getAttribute('folder');
 			fetch(`/folder_data/${folder}`).then(
@@ -213,8 +246,6 @@ class CodeBox extends HTMLElement {
 				});
 			});
 		}
-		
-		this.updateLines();
 	}
 	addFile(fileName, fileData, code, textarea) {
 		this.currentFile = fileName;
@@ -254,6 +285,10 @@ class CodeBox extends HTMLElement {
 	}
 	isValidJsFile(fileName) {
 		let valid = fileName.match(/\.js$/, 'i') ? true : false;
+		return valid;
+	}
+	isValidFile(fileName) {
+		let valid = fileName.match(/\.(\w+)$/, 'i') ? true : false;
 		return valid;
 	}
 	parseInputCode(code, highlight) {
@@ -298,6 +333,8 @@ class CodeBox extends HTMLElement {
 					lineData += ' ';
 				} else if (!isNaN(+tokens[j])) {
 					lineData += `<span class="number">${tokens[j]}</span>`;
+				} else if (this.operators.includes(tokens[j])) {
+					lineData += `<span class="operator">${tokens[j]}</span>`;
 				} else if (tokens[j] != undefined) {
 					lineData += `<span class="other">${tokens[j]}</span>`;
 				}

@@ -5,14 +5,24 @@ const fs = require('fs');
 app.use(express.static('public'));
 app.use(express.json());
 
+let folderName = '';
+
 app.get('/folder_data/:folderName', (req, res) => {
-	const folderName = req.params.folderName;
+	folderName = req.params.folderName;
 	let files = {};
 	fs.readdirSync(`./public/${folderName}`).forEach(file => {
 		let fileData = fs.readFileSync(`./public/${folderName}/${file}`);
 		files[file] = fileData.toString();
 	});
 	res.end(JSON.stringify(files));
+});
+
+app.get('/add_file/:newFileName', (req, res) => {
+	if (folderName != '') {
+		const newFileName = req.params.newFileName;
+		fs.writeFileSync(`./public/${folderName}/${newFileName}`, '');
+	}
+	res.end();
 });
 
 app.get('/', (req, res) => {

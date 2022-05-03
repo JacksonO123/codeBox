@@ -77,10 +77,15 @@ code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .li
   display: none;
 }
 
+.tab-control-wrapper {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}
+
 .codebox-tabs {
 	width: 100%;
 	height: 45px;
-	min-height: 45px;
 	border-bottom: 1px solid var(--light);
 	box-shadow: 0 -2px 8px var(--light);
 	position: sticky;
@@ -92,7 +97,7 @@ code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .li
 
 .tab {
 	height: 100%;
-	padding: 0 16px;
+	padding: 0 20px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -106,6 +111,31 @@ code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .li
 
 .tab:hover {
 	background: var(--light);
+}
+
+.add-file-button {
+	height: 28px;
+	aspect-ratio: 1;
+	/* background: rgba(255, 255, 255, 0.1); */
+	background: var(--lightHover);
+	border: none;
+	cursor: pointer;
+	color: white;
+	align-self: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 18px;
+	border-radius: 4px;
+	transition: 0.15s;
+}
+
+.add-file-button:hover {
+	background: var(--light);
+}
+
+.add-file-button > * {
+	transform: translateY(-2px);
 }
 
 .codebox-line-nums {
@@ -164,4 +194,7 @@ br {
 .tab-space {
 	margin-right: 20.4px;
 	margin-left: 20.4px;
+}
+.operator {
+	color: rgb(91, 155, 175);
 }
