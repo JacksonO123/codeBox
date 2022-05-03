@@ -27,6 +27,9 @@ class CodeBox extends HTMLElement {
 		this.lines = 0;
 		this.currentTabs = 0;
 		this.lineEl = null;
+		this.tabEl = null;
+		this.currentTab = null;
+		this.editable = false;
 		this.alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
 		this.parens = [
 			['(', ')'],
@@ -73,9 +76,11 @@ class CodeBox extends HTMLElement {
 	}
 	connectedCallback() {
 		const tabs = h('div');
+		this.tabEl = tabs;
 		tabs.classList.add('codebox-tabs')
 
 		const tabWrapper = h('div');
+		this.tabEl = tabWrapper;
 		tabWrapper.classList.add('tab-wrapper');
 		tabs.appendChild(tabWrapper);
 
@@ -102,20 +107,20 @@ class CodeBox extends HTMLElement {
 		if (this.hasAttribute('editable')) {
 			editable = parseBool(this.getAttribute('editable'));
 		}
+		this.editable = editable;
 
 		contentWrapper.appendChild(lines);
 		contentWrapper.appendChild(content);
 		this.appendChild(tabs);
 		this.appendChild(contentWrapper);
-
-		if (!editable) {
-			this.updateLines();
-			return;
-		}
 		
 		const textarea = h('textarea');
 		textarea.setAttribute('spellcheck', 'false');
 		textarea.addEventListener('input', e => {
+			if (!this.editable || this.currentFile == null) {
+				e.preventDefault();
+				return;
+			}
 			let start = textarea.selectionStart;
 			let char = e.target.value[start - 1];
 			let openParens = this.parens.map(item => item[0]);
@@ -130,6 +135,10 @@ class CodeBox extends HTMLElement {
 			}
 		});
 		textarea.addEventListener('keydown', e => {
+			if (!this.editable || this.currentFile == null) {
+				e.preventDefault();
+				return;
+			}
 			let start = textarea.selectionStart;
 			let openParens = this.parens.map(item => item[0]);
 			let closeParens = this.parens.map(item => item[1]);
@@ -192,16 +201,62 @@ class CodeBox extends HTMLElement {
 		});
 
 		content.appendChild(textarea);
+
+
+		if (this.hasAttribute('folder')) {
+			const folder = this.getAttribute('folder');
+			fetch(`/folder_data/${folder}`).then(
+				res => res.json()
+			).then(data => {
+				Object.keys(data).forEach(key => {
+					this.addFile(key, data[key], code, textarea);
+				});
+			});
+		}
 		
 		this.updateLines();
 	}
+	addFile(fileName, fileData, code, textarea) {
+		this.currentFile = fileName;
+		const tab = h('div');
+		tab.classList.add('tab');
+		tab.innerHTML = fileName;
+		tab.onclick = () => {
+			this.currentFile = fileName;
+			textarea.value = fileData;
+			this.textareaUpdate(code, textarea, fileData);
+			this.setTabFocused(fileName);
+		}
+		this.tabEl.appendChild(tab);
+		this.setTabFocused(fileName);
+		textarea.value = fileData;
+		this.textareaUpdate(code, textarea, textarea.value);
+	}
+	setTabFocused(fileName) {
+		let tempTabs = this.tabEl.children;
+		for (let i = 0; i < tempTabs.length; i++) {
+			if (tempTabs[i].innerText == fileName) {
+				if (!tempTabs[i].classList.contains('focused')) {
+					console.log('focusing');
+					tempTabs[i].classList.add('focused');
+				}
+			} else {
+				tempTabs[i].classList.remove('focused');
+			}
+		}
+	}
 	textareaUpdate(code, input, value) {
-		let codeLines = this.parseInputCode(value);
+		const validJsFile = this.isValidJsFile(this.currentFile ? this.currentFile : '');
+		let codeLines = this.parseInputCode(value, validJsFile);
 		code.innerHTML = codeLines;
 		this.lines = input.value.split('\n').length - 1;
 		this.updateLines();
 	}
-	parseInputCode(code) {
+	isValidJsFile(fileName) {
+		let valid = fileName.match(/\.js$/, 'i') ? true : false;
+		return valid;
+	}
+	parseInputCode(code, highlight) {
 		let lines = code.split('\n');
 		let finalLines = '';
 
@@ -217,6 +272,8 @@ class CodeBox extends HTMLElement {
 			for (let j = 0; j < tokens.length; j++) {
 				if (tokens[j] == '\t') {
 					lineData += '<span class="tab-space"></span>';
+				} else if (!highlight) {
+					lineData += `<span class="other">${tokens[j]}</span>`;
 				} else if (quotes.includes(tokens[j])) {
 					if (inString) {
 						if (tokens[j] === startString) {

@@ -1,6 +1,7 @@
 :root {
 	--dark: #32374d;
 	--light: #6d6f76;
+	--lightHover: #6d6f7681;
 	--contentPadding: 12px;
 	--editorFontSize: 17px;
 }
@@ -89,6 +90,24 @@ code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .li
 	justify-content: space-between;
 }
 
+.tab {
+	height: 100%;
+	padding: 0 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	color: white;
+	border-right: 1px solid var(--light);
+	transition: 0.15s;
+	font-size: 17px;
+	font-weight: 300;
+}
+
+.tab:hover {
+	background: var(--light);
+}
+
 .codebox-line-nums {
 	border-right: 1px solid var(--light);
 	display: flex;
@@ -121,6 +140,15 @@ br {
 	tab-size: 4;
 }
 
+.tab-wrapper {
+	display: flex;
+	flex-direction: row;
+}
+
+.focused {
+	background: var(--lightHover);
+}
+
 .util {
 	color: orchid;
 }
@@ -134,7 +162,6 @@ br {
 	color: rgb(101, 194, 101);
 }
 .tab-space {
-	/* width: 40.8px !important; */
 	margin-right: 20.4px;
 	margin-left: 20.4px;
 }
