@@ -134,10 +134,6 @@ code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .li
 	background: var(--light);
 }
 
-.add-file-button > * {
-	transform: translateY(-2px);
-}
-
 .codebox-line-nums {
 	border-right: 1px solid var(--light);
 	display: flex;

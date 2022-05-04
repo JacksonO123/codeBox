@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/JacksonO123/codeBox/issues"
   },
-  "homepage": "https://github.com/JacksonO123/codeBox#readme"
+  "homepage": "https://github.com/JacksonO123/codeBox#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
 }

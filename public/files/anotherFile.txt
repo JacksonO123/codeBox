@@ -1,0 +1,1 @@
+no syntax highlighting for txt files
