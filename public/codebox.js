@@ -156,6 +156,7 @@ class CodeBox extends HTMLElement {
 				textarea.value = textarea.value.substring(0, start) + '\t' + textarea.value.substring(start);
 				textarea.setSelectionRange(start+1, start+1);
 				this.currentTabs++;
+				this.textareaUpdate(code, textarea, textarea.value);
 			} else if (e.key == 'Enter') {
 				e.preventDefault();
 				console.log(textarea.scrollTop, this.lines*19.5);
@@ -301,6 +302,7 @@ class CodeBox extends HTMLElement {
 
 			let lineData = '';
 			let tokens = this.splitByChars(lines[i]);
+			console.log(tokens);
 			let inString = false;
 			let startString;
 			const quotes = ["'", '"', "`"];
@@ -327,6 +329,8 @@ class CodeBox extends HTMLElement {
 				} else if (tokens[j + 1] && tokens[j] + tokens[j+1] == '=>') {
 					lineData += `<span class="util">=></span>`;
 					j += 2;
+				} else if (tokens[j] == ' ') {
+					lineData += '<span class="space"></span>';
 				} else if (this.wordTypes.util.includes(tokens[j])) {
 					lineData += `<span class="util">${tokens[j]}</span>`;
 				} else if (tokens[j] == ' ') {
