@@ -32,6 +32,7 @@ class CodeBox extends HTMLElement {
 		this.editable = false;
 		this.alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
 		this.operators = '+-*/%^=<>';
+		this.filesData = {};
 		this.parens = [
 			['(', ')'],
 			['[', ']'],
@@ -139,6 +140,7 @@ class CodeBox extends HTMLElement {
 			} else {
 				this.textareaUpdate(code, textarea, e.target.value);
 			}
+			this.filesData[this.currentFile] = textarea.value;
 		});
 		textarea.addEventListener('keydown', e => {
 			if (!this.editable || this.currentFile == null) {
@@ -159,7 +161,6 @@ class CodeBox extends HTMLElement {
 				this.textareaUpdate(code, textarea, textarea.value);
 			} else if (e.key == 'Enter') {
 				e.preventDefault();
-				console.log(textarea.scrollTop, this.lines*19.5);
 				if (textarea.scrollTop - this.lines*19.5 > 445) {
 					textarea.scrollTo(0, this.lines*19.5);
 				}
@@ -201,6 +202,7 @@ class CodeBox extends HTMLElement {
 			}
 			this.lines = textarea.value.split('\n').length - 1;
 			this.updateLines();
+			this.filesData[this.currentFile] = textarea.value;
 		});
 		textarea.addEventListener('scroll', e => {
 			lines.scrollTo(0, e.target.scrollTop);
@@ -210,6 +212,16 @@ class CodeBox extends HTMLElement {
 		content.appendChild(textarea);
 
 		if (this.hasAttribute('folder')) {
+			const runButton = h('button');
+			runButton.classList.add('run-button');
+			runButton.innerText = 'Run';
+			runButton.onclick = () => {
+				if (this.isValidJsFile(this.currentFile)) {
+					this.run();
+				} else {
+					console.warn('File must be a valid js file to run');
+				}
+			}
 			const addFileButton = h('button');
 			addFileButton.classList.add('add-file-button');
 			addFileButton.innerHTML = '<span>+</span>';
@@ -229,6 +241,7 @@ class CodeBox extends HTMLElement {
 				}
 			}
 			if (editable) {
+				controlWrapper.appendChild(runButton);
 				tabControlWrapper.appendChild(addFileButton);
 			}
 		}
@@ -236,12 +249,16 @@ class CodeBox extends HTMLElement {
 		
 		this.updateLines();
 	}
+	run() {
+		eval(this.filesData[this.currentFile]);
+	}
 	getFolderFiles(code, textarea) {
 		if (this.hasAttribute('folder')) {
 			const folder = this.getAttribute('folder');
 			fetch(`/folder_data/${folder}`).then(
 				res => res.json()
 			).then(data => {
+				this.filesData = data;
 				Object.keys(data).forEach(key => {
 					this.addFile(key, data[key], code, textarea);
 				});
@@ -269,7 +286,6 @@ class CodeBox extends HTMLElement {
 		for (let i = 0; i < tempTabs.length; i++) {
 			if (tempTabs[i].innerText == fileName) {
 				if (!tempTabs[i].classList.contains('focused')) {
-					console.log('focusing');
 					tempTabs[i].classList.add('focused');
 				}
 			} else {
@@ -302,7 +318,6 @@ class CodeBox extends HTMLElement {
 
 			let lineData = '';
 			let tokens = this.splitByChars(lines[i]);
-			console.log(tokens);
 			let inString = false;
 			let startString;
 			const quotes = ["'", '"', "`"];

@@ -105,7 +105,7 @@ code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .li
 	color: white;
 	border-right: 1px solid var(--light);
 	transition: 0.15s;
-	font-size: 17px;
+	font-size: var(--editorFontSize);
 	font-weight: 300;
 }
 
@@ -113,10 +113,19 @@ code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .li
 	background: var(--light);
 }
 
-.add-file-button {
-	height: 28px;
-	aspect-ratio: 1;
-	/* background: rgba(255, 255, 255, 0.1); */
+.run-button {
+	padding: 4px 8px;
+	font-size: var(--editorFontSize);
+	font-weight: 300;
+}
+
+.control-wrapper {
+	display: flex;
+	align-items: center;
+	padding: 0 6px;
+}
+
+.run-button, .add-file-button {
 	background: var(--lightHover);
 	border: none;
 	cursor: pointer;
@@ -128,6 +137,11 @@ code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .li
 	font-size: 18px;
 	border-radius: 4px;
 	transition: 0.15s;
+}
+
+.add-file-button {
+	height: 28px;
+	aspect-ratio: 1;
 }
 
 .add-file-button:hover {

@@ -1,2 +1,1 @@
- - make removing files
- - make running javascript files
+ - add debounce for saving files
