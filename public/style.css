@@ -113,7 +113,7 @@ code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .li
 	background: var(--light);
 }
 
-.run-button {
+.ctrl-button {
 	padding: 4px 8px;
 	font-size: var(--editorFontSize);
 	font-weight: 300;
@@ -123,9 +123,10 @@ code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .li
 	display: flex;
 	align-items: center;
 	padding: 0 6px;
+	gap: 6px;
 }
 
-.run-button, .add-file-button {
+.ctrl-button, .add-file-button {
 	background: var(--lightHover);
 	border: none;
 	cursor: pointer;

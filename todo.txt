@@ -1,1 +1,2 @@
- - add debounce for saving files
+ - add comment highlighting
+ - add multi-line string highlighting
