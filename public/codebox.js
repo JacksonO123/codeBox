@@ -38,7 +38,7 @@ class CodeBox extends HTMLElement {
     this.contentEl = null;
     this.currentTab = null;
     this.editable = false;
-    this.alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
+    this.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
     this.operators = '+-*/%^=<>';
     this.filesData = {};
     this.parens = [
@@ -368,6 +368,7 @@ class CodeBox extends HTMLElement {
     let lines = code.split('\n');
     let finalLines = '';
 
+    let inMultilineString = false;
     for (let i = 0; i < lines.length; i++) {
       const newLine = new HtmlSringElement('span');
       newLine.addClass('line');
@@ -375,6 +376,8 @@ class CodeBox extends HTMLElement {
       let lineData = '';
       let tokens = this.splitByChars(lines[i]);
       let inString = false;
+      let inComment = false;
+      let canCloseComment = false;
       let startString;
       const quotes = ["'", '"', '`'];
       for (let j = 0; j < tokens.length; j++) {
@@ -382,6 +385,18 @@ class CodeBox extends HTMLElement {
           lineData += '<span class="tab-space"></span>';
         } else if (!highlight) {
           lineData += `<span class="other">${tokens[j]}</span>`;
+        } else if (inComment) {
+          lineData += `<span class="comment">${tokens[j]}</span>`;
+          if (tokens[j - 1] == '*' && tokens[j] == '/' && canCloseComment) {
+            inComment = false;
+          }
+        } else if (tokens[j] == '/' && tokens[j + 1] == '/') {
+          inComment = true;
+          lineData += `<span class="comment">${tokens[j]}</span>`
+        } else if (tokens[j] == '/' && tokens[j + 1] == '*') {
+          canCloseComment = true;
+          inComment = true;
+          lineData += `<span class="comment">${tokens[j]}</span>`
         } else if (quotes.includes(tokens[j])) {
           if (inString) {
             if (tokens[j] === startString) {
@@ -399,7 +414,7 @@ class CodeBox extends HTMLElement {
           lineData += tokens[j];
         } else if (tokens[j + 1] && tokens[j] + tokens[j + 1] == '=>') {
           lineData += `<span class="util">=></span>`;
-          j += 2;
+          j++;
         } else if (tokens[j] == ' ') {
           lineData += '<span class="space"></span>';
         } else if (this.wordTypes.util.includes(tokens[j])) {
@@ -413,6 +428,7 @@ class CodeBox extends HTMLElement {
         } else if (tokens[j] != undefined) {
           lineData += `<span class="other">${tokens[j]}</span>`;
         }
+        if (inString) inMultilineString = true;
       }
       newLine.setContent(lineData);
 

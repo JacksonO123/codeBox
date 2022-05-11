@@ -213,3 +213,6 @@ br {
 .operator {
 	color: rgb(103, 175, 196);
 }
+.comment {
+	color: rgb(150, 150, 150);
+}

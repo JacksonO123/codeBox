@@ -1,2 +1,1 @@
- - add comment highlighting
  - add multi-line string highlighting
