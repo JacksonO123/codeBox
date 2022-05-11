@@ -285,7 +285,12 @@ class CodeBox extends HTMLElement {
         }
       };
       if (editable) {
-        controlWrapper.appendChild(saveButton);
+        if (this.hasAttribute('savable')) {
+          const canSave = parseBool(this.getAttribute('savable'));
+          if (canSave) {
+            controlWrapper.appendChild(saveButton);
+          }
+        }
         controlWrapper.appendChild(runButton);
         tabControlWrapper.appendChild(addFileButton);
       }
