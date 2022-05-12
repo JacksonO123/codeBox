@@ -179,6 +179,7 @@ br {
 	caret-color: white;
 	z-index: 1;
 	tab-size: 4;
+	line-height: calc(100% + 4px);
 }
 
 .tab-wrapper {
@@ -207,8 +208,8 @@ br {
 	margin-left: 5.1px;
 }
 .tab-space {
-	margin-right: 20.4px;
-	margin-left: 20.4px;
+	margin-right: 18.5px;
+	margin-left: 18.5px;
 }
 .operator {
 	color: rgb(103, 175, 196);
