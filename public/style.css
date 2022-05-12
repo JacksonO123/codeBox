@@ -182,10 +182,10 @@ br {
 	font-size: var(--editorFontSize);
 	border: none;
 	background: transparent;
-	color: transparent;
+	color: orange;
 	caret-color: white;
 	z-index: 1;
-	tab-size: 4;
+	tab-size: 41px;
 	line-height: 20.5px;
 }
 
@@ -215,8 +215,6 @@ br {
 	margin-left: 5.1px;
 }
 .tab-space {
-	/* margin-right: 18.5px; */
-	/* margin-left: 18.5px; */
 	margin-right: 20.4px;
 	margin-left: 20.4px;
 }
