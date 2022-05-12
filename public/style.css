@@ -73,7 +73,10 @@ code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .li
 	overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  gap: 1px;
+}
+
+.codebox-code > .line {
+	height: 20.5px;
 }
 
 .codebox-code::-webkit-scrollbar, .codebox-line-nums::-webkit-scrollbar {
