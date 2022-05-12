@@ -71,6 +71,9 @@ code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .li
 	min-height: 100%;
 	max-height: 100%;
 	overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .codebox-code::-webkit-scrollbar, .codebox-line-nums::-webkit-scrollbar {
@@ -158,6 +161,7 @@ code-box, .codebox-line-nums, .codebox-content > textarea, .line, .line > *, .li
 	padding: var(--contentPadding);
 	font-size: var(--editorFontSize);
 	overflow-y: scroll;
+  gap: 1px;
 }
 
 br {
@@ -179,7 +183,7 @@ br {
 	caret-color: white;
 	z-index: 1;
 	tab-size: 4;
-	line-height: calc(100% + 4px);
+	line-height: 20.5px;
 }
 
 .tab-wrapper {
@@ -208,8 +212,10 @@ br {
 	margin-left: 5.1px;
 }
 .tab-space {
-	margin-right: 18.5px;
-	margin-left: 18.5px;
+	/* margin-right: 18.5px; */
+	/* margin-left: 18.5px; */
+	margin-right: 20.4px;
+	margin-left: 20.4px;
 }
 .operator {
 	color: rgb(103, 175, 196);

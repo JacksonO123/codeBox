@@ -438,9 +438,7 @@ class CodeBox extends HTMLElement {
       newLine.setContent(lineData);
 
       finalLines += newLine.finalize();
-      finalLines += '<br>';
     }
-    finalLines = finalLines.substring(0, finalLines.lastIndexOf('<br>'));
 
     return finalLines;
   }
