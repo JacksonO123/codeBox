@@ -270,18 +270,19 @@ class CodeBox extends HTMLElement {
       addFileButton.classList.add('add-file-button');
       addFileButton.innerHTML = '<span>+</span>';
       addFileButton.onclick = () => {
-        const newFileName = prompt('Enter file name')?.trim();
+        let newFileName = prompt('Enter file name')?.trim();
         if (newFileName != null) {
           if (newFileName == '') {
             alert('file name cannot be empty');
+            return;
           } else if (!this.isValidFile(newFileName)) {
+            newFileName += '.txt';
             alert('invalid file name. file name must have extension');
-          } else {
-            fetch(`/add_file/${newFileName}`).then(() => {
-              this.tabEl.innerHTML = '';
-              this.getFolderFiles(code, textarea);
-            });
           }
+          fetch(`/add_file/${newFileName}`).then(() => {
+            this.tabEl.innerHTML = '';
+            this.getFolderFiles(code, textarea);
+          });
         }
       };
       if (editable) {
@@ -390,6 +391,24 @@ class CodeBox extends HTMLElement {
           lineData += '<span class="tab-space"></span>';
         } else if (!highlight) {
           lineData += `<span class="other">${tokens[j]}</span>`;
+        } else if (quotes.includes(tokens[j])) {
+          lineData += `<span class="string">${tokens[j]}</span>`;
+          if (inString) {
+            if (tokens[j] === startString) {
+              inString = false;
+            }
+          } else {
+            if (inMultilineString) {
+              inMultilineString = false;
+            } else {
+              inString = true;
+              startString = tokens[j];
+            }
+          }
+        } else if (inMultilineString) {
+          lineData += `<span class="string">${tokens[j]}</span>`;
+        } else if (inString) {
+          lineData += `<span class="string">${tokens[j]}</span>`;
         } else if (inComment) {
           lineData += `<span class="comment">${tokens[j]}</span>`;
           if (tokens[j - 1] == '*' && tokens[j] == '/' && canCloseComment) {
@@ -402,21 +421,6 @@ class CodeBox extends HTMLElement {
           canCloseComment = true;
           inComment = true;
           lineData += `<span class="comment">${tokens[j]}</span>`
-        } else if (quotes.includes(tokens[j])) {
-          if (inString) {
-            if (tokens[j] === startString) {
-              lineData += `${tokens[j]}</span>`;
-              inString = false;
-            } else {
-              lineData += tokens[j];
-            }
-          } else {
-            lineData += `<span class="string">${tokens[j]}`;
-            inString = true;
-            startString = tokens[j];
-          }
-        } else if (inString) {
-          lineData += tokens[j];
         } else if (tokens[j + 1] && tokens[j] + tokens[j + 1] == '=>') {
           lineData += `<span class="util">=></span>`;
           j++;
@@ -433,10 +437,10 @@ class CodeBox extends HTMLElement {
         } else if (tokens[j] != undefined) {
           lineData += `<span class="other">${tokens[j]}</span>`;
         }
-        if (inString) inMultilineString = true;
       }
-      newLine.setContent(lineData);
+      if (inString) inMultilineString = true;
 
+      newLine.setContent(lineData);
       finalLines += newLine.finalize();
     }
 

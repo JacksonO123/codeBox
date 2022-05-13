@@ -182,7 +182,8 @@ br {
 	font-size: var(--editorFontSize);
 	border: none;
 	background: transparent;
-	color: orange;
+	/* color: orange; */
+	color: transparent;
 	caret-color: white;
 	z-index: 1;
 	tab-size: 41px;
@@ -223,4 +224,13 @@ br {
 }
 .comment {
 	color: rgb(150, 150, 150);
+}
+.col {
+	display: flex;
+	flex-direction: column;
+}
+.row {
+	display: flex;
+	flex-direction: row;
+	line-height: 20.5px;
 }
