@@ -18,8 +18,11 @@ For files to be shown and saved in the codebox include the following code in a n
 Some of the code is optional, the api methods that **must** to be present are:
 
 - `/folder_data`
+  - serve the files
 - `/add_file`
+  - add a file to the codebox (only if editable is true)
 - `/save_file`
+  - save a file to the codebox (only if only if savable is true)
 
 ```
 const express = require('express');
