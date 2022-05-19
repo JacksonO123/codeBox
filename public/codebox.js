@@ -375,6 +375,7 @@ class CodeBox extends HTMLElement {
     let finalLines = '';
 
     let inMultilineString = false;
+    let startMultilineString;
     for (let i = 0; i < lines.length; i++) {
       const newLine = new HtmlSringElement('span');
       newLine.addClass('line');
@@ -399,7 +400,9 @@ class CodeBox extends HTMLElement {
             }
           } else {
             if (inMultilineString) {
-              inMultilineString = false;
+              if (tokens[j] === startMultilineString) {
+                inMultilineString = false;
+              }
             } else {
               inString = true;
               startString = tokens[j];
@@ -438,7 +441,10 @@ class CodeBox extends HTMLElement {
           lineData += `<span class="other">${tokens[j]}</span>`;
         }
       }
-      if (inString) inMultilineString = true;
+      if (inString) {
+        inMultilineString = true;
+        startMultilineString = startString;
+      }
 
       newLine.setContent(lineData);
       finalLines += newLine.finalize();
