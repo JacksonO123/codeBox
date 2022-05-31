@@ -2,16 +2,20 @@
 
 ### Codebox is an interactive text editor with syntax highlighting
 
+codebox v2 aims to get rid of the problems found in codebox v1 by changing the way it works fundementally
+
 <br>
 
 ## Getting Started
 
-- Apply the provided `style.css` in the header, and `codebox.js` at the end of the body.
+- Apply the provided `style.css`, and `codebox.js` in the header.
 - The code-box will fit whatever container it is put into
 
----
+_in development_
 
-## Managing Files
+<!-- --- -->
+
+<!-- ## Managing Files
 
 For files to be shown and saved in the codebox include the following code in a node server
 
@@ -81,3 +85,5 @@ app.listen(8000, () => {
 - To attach files to show up in the codebox, make a folder in the `/public` folder with the files to be shown in the codebox, then add the folder's name to the `folder` attribute in the code-box element.
 - Set the `editable` attribute to `true` or `false` to set weather the code box should be editable (true by default).
 - To add the ability to save files, set the `savable` attribute to `true` or `false` (false by default).
+
+_does not apply to codebox v2_ -->

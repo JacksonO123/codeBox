@@ -1,0 +1,11 @@
+{
+  "name": "v2",
+  "version": "1.0.0",
+  "description": "Codebox v2",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Jackson Otto",
+  "license": "MIT"
+}
