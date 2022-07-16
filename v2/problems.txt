@@ -1,0 +1,1 @@
+switching from color to color creates a gap between them without a space being there

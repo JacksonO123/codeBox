@@ -47,9 +47,25 @@ class CodeBox extends HTMLElement {
 		editor.setAttribute('aria-multiline', 'true');
 		editor.setAttribute('aria-autocomplete', 'list');
 		editor.id = 'editor';
+
 		let pressingMeta = false;
+		let pressedEnter = false;
 		editor.addEventListener('keyup', e => {
 			if (e.key == 'Meta') pressingMeta = false;
+		});
+		editor.addEventListener('paste', e => {
+			e.preventDefault();
+			const text = e.clipboardData.getData('text/html');
+			const el = this.getElFromPasteText(text);
+			console.log(el);
+			// insert text at cursor
+			const range = document.createRange();
+			range.selectNodeContents(editor);
+			range.collapse(false);
+			const selection = window.getSelection();
+			selection.removeAllRanges();
+			selection.addRange(range);
+			document.execCommand('insertHTML', false, text);
 		});
 		editor.addEventListener('keydown', e => {
 			const selection = window.getSelection();
@@ -73,7 +89,9 @@ class CodeBox extends HTMLElement {
 						e.preventDefault();
 					} else {
 						const index = Array.prototype.indexOf.call(editor.childNodes, line);
-						this.setCurrentLine(editor, editor.childNodes[index - 1]);
+						if (!pressedEnter) {
+							this.setCurrentLine(editor, editor.childNodes[index - 1]);
+						}
 					}
 				}
 			} else if (e.key == 'Enter') {
@@ -87,11 +105,27 @@ class CodeBox extends HTMLElement {
 				newRange.setEnd(newLine, 0);
 				selection.removeAllRanges();
 				selection.addRange(newRange);
+			} else if (e.key == 'ArrowDown') {
+			}
+
+			if (e.key == 'Enter') {
+				pressedEnter = true;
+			} else {
+				pressedEnter = false;
 			}
 		});
-		editor.addEventListener('click', () => {
-			document.execCommand('forecolor', false, 'turquoise');
-		});
+    let red = false;
+    editor.addEventListener('keyup', e => {
+      if (e.key == 'Escape') {
+        if (red) {
+          this.setColor('white');
+          red = false;
+        } else {
+          this.setColor('red');
+          red = true;
+        }
+      }
+    });
 
 		// render elements
 		tabWrapper.appendChild(tab);
@@ -106,6 +140,14 @@ class CodeBox extends HTMLElement {
 
 		// render line numbers
 		this.renderLineNumbers();
+	}
+  setColor(color) {
+    console.log(color);
+		document.execCommand('forecolor', false, color);
+  }
+	getElFromPasteText(text) {
+		text = text.substring(text.indexOf('>') + 2);
+		return text.match(/^\w+/gm)[0];
 	}
 	getInnerHtml(el) {
 		let innerHtml = '';
@@ -129,7 +171,6 @@ class CodeBox extends HTMLElement {
 				children[i].classList.remove('current-line');
 			}
 			if (line && line.tagName == 'LINE-EL') {
-				console.log('setting line', line);
 				line.classList.add('current-line');
 			}
 		}
@@ -149,7 +190,8 @@ class CodeBox extends HTMLElement {
 	getNewLine(current = false) {
 		const line = h('line-el');
 		if (current) line.classList.add('current-line');
-		line.addEventListener('mousedown', () => {
+		line.addEventListener('mousedown', e => {
+			e.stopPropagation();
 			this.setCurrentLine(get('editor'), line);
 		});
 		return line;
