@@ -3,6 +3,6 @@ function doThing() {
 	let thing = 'new thing';
 	console.log(thing);
 	return 2;
-	// new change - again
+	// new change - again, again
 }
 doThing();

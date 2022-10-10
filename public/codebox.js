@@ -264,6 +264,19 @@ class CodeBox extends HTMLElement {
         this.save(textarea);
       };
 
+      let pressingCtrl = false;
+      document.addEventListener('keydown', e => {
+        if (e.ctrlKey || e.key == 'Meta') pressingCtrl = true;
+        if (pressingCtrl && e.which === 83) {
+          e.preventDefault();
+          this.save(textarea);
+          return false;
+        }
+      });
+      document.addEventListener('keydup', e => {
+        if (e.key == 'Meta' || e.ctrlKey) pressingCtrl = false;
+      });
+      
       if (editable) {
         if (this.hasAttribute('savable')) {
           const canSave = parseBool(this.getAttribute('savable'));
