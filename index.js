@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(express.json());
 
@@ -15,14 +16,6 @@ app.get('/folder_data/:folderName', (req, res) => {
     files[file] = fileData.toString();
   });
   res.end(JSON.stringify(files));
-});
-
-app.get('/add_file/:newFileName', (req, res) => {
-  if (folderName != '') {
-    const newFileName = req.params.newFileName;
-    fs.writeFileSync(`./public/${folderName}/${newFileName}`, '');
-  }
-  res.end();
 });
 
 app.post('/save_file', (req, res) => {

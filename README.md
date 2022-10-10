@@ -15,20 +15,21 @@
 
 For files to be shown and saved in the codebox include the following code in a node server
 
-Some of the code is optional, the api methods that **must** to be present are:
+Some of the code is optional, the api methods that must be present for saving and showing files are:
 
 - `/folder_data`
   - serve the files
-- `/add_file`
-  - add a file to the codebox (only if editable is true)
 - `/save_file`
   - save a file to the codebox (only if only if savable is true)
 
-```
+Example:
+
+```javascript
 const express = require('express');
 const app = express();
 const fs = require('fs');
 
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(express.json());
 
@@ -44,15 +45,6 @@ app.get('/folder_data/:folderName', (req, res) => {
     files[file] = fileData.toString();
   });
   res.end(JSON.stringify(files));
-});
-
-// add a file
-app.get('/add_file/:newFileName', (req, res) => {
-  if (folderName != '') {
-    const newFileName = req.params.newFileName;
-    fs.writeFileSync(`./public/${folderName}/${newFileName}`, '');
-  }
-  res.end();
 });
 
 // save a file
@@ -81,5 +73,3 @@ app.listen(8000, () => {
 - To attach files to show up in the codebox, make a folder in the `/public` folder with the files to be shown in the codebox, then add the folder's name to the `folder` attribute in the code-box element.
 - Set the `editable` attribute to `true` or `false` to set weather the code box should be editable (true by default).
 - To add the ability to save files, set the `savable` attribute to `true` or `false` (false by default).
-
-_does not apply to codebox v2_

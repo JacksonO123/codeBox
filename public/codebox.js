@@ -1,5 +1,3 @@
-// document.head.innerHTML +=
-//   '<script src="https://unpkg.com/axios/dist/axios.min.js"></script>';
 const axiosImport = h('script');
 axiosImport.setAttribute('src', 'https://unpkg.com/axios/dist/axios.min.js');
 document.head.appendChild(axiosImport);
@@ -266,25 +264,6 @@ class CodeBox extends HTMLElement {
         this.save(textarea);
       };
 
-      const addFileButton = h('button');
-      addFileButton.classList.add('add-file-button');
-      addFileButton.innerHTML = '<span>+</span>';
-      addFileButton.onclick = () => {
-        let newFileName = prompt('Enter file name')?.trim();
-        if (newFileName != null) {
-          if (newFileName == '') {
-            alert('file name cannot be empty');
-            return;
-          } else if (!this.isValidFile(newFileName)) {
-            newFileName += '.txt';
-            alert('invalid file name. file name must have extension');
-          }
-          fetch(`/add_file/${newFileName}`).then(() => {
-            this.tabEl.innerHTML = '';
-            this.getFolderFiles(code, textarea);
-          });
-        }
-      };
       if (editable) {
         if (this.hasAttribute('savable')) {
           const canSave = parseBool(this.getAttribute('savable'));
@@ -293,7 +272,6 @@ class CodeBox extends HTMLElement {
           }
         }
         controlWrapper.appendChild(runButton);
-        tabControlWrapper.appendChild(addFileButton);
       }
     }
 
